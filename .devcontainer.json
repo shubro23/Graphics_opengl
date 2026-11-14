@@ -1,0 +1,15 @@
+{
+  "name": "Vulkan C++ Desktop",
+  "image":"mcr.microsoft.com/devcontainers/cpp:ubuntu-24.04",
+  "features": {
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
+  },
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "Desktop (noVNC)",
+      "onAutoForward": "openBrowser"
+    }
+  },
+  "postCreateCommand": "sudo apt update && sudo apt install -y libvulkan-dev vulkan-tools vulkan-validationlayers glslc mesa-vulkan-drivers libx11-dev libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev"
+}
