@@ -2,9 +2,17 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <stdexcept>
+#include<vector>
 using namespace std;
 
+
 int main(){
+
+    uint32_t device_count=0;
+    
+    VkPhysicalDeviceProperties props{};
+
+
     if(!glfwInit()){
         throw runtime_error("Failed to initilize gflw");    
     }
@@ -13,7 +21,7 @@ int main(){
     GLFWwindow* window=glfwCreateWindow(600, 300,"My_first_vulkan",nullptr,nullptr);
     VkInstance instance;
 
-    VkInstanceCreateInfo Inst{};//This way we create an instances as instance is a struct type we tend to give default value as 0 untill changed
+    VkInstanceCreateInfo Inst{};//Inst is the configuration struct (blueprint), while instance will hold the created Vulkan object
 
     Inst.sType=VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;//default value
     Inst.pNext=nullptr;
@@ -27,11 +35,27 @@ int main(){
     if(!vkCreateInstance(&Inst,nullptr,&instance))//checking for vksucess if not then we have to change, assret will be issued otherwise
     {
         cout << "Vulkan instance created successfully!\n";
+        
+        
+        vkEnumeratePhysicalDevices(instance,&device_count,nullptr);
 
+        vector<VkPhysicalDevice> devices(device_count);
+        vkEnumeratePhysicalDevices(instance,&device_count,devices.data());
+
+      
+        for(uint32_t i=0 ; i<device_count; i++)
+        {
+            vkGetPhysicalDeviceProperties(devices[i],&props);
+            cout<<props.deviceName<<'\n';
+
+        }
+        
 
         while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
+            glfwPollEvents();
         }
+
+
     }
     vkDestroyInstance(instance,nullptr);
     glfwDestroyWindow(window);
